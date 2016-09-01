@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.lanyine.manifold</groupId>
 		<artifactId>manifold-build</artifactId>
-		<version>0.5.3-RELEASE</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>manifold-tools</artifactId>
 	<packaging>jar</packaging>
