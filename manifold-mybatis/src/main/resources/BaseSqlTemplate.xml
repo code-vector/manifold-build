@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mapper>
+	<!-- 新增一个对象 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="[id]" parameterType="ParamsQuery">
+		INSERT INTO [table]
+		${update.colValues}
+	</insert>
+
+	<!-- 根据主键修改 -->
+	<update id="updateById" parameterType="ParamsQuery">
+		UPDATE [table]
+		SET ${update.sets}
+		WHERE [id] = #{query.id}
+	</update>
+	<update id="updateByIds" parameterType="ParamsQuery">
+		UPDATE [table]
+		SET ${updateSets}
+		WHERE [id] IN
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 根据查询条件批量更新 -->
+	<update id="update" parameterType="ParamsQuery">
+		UPDATE [table]
+		SET ${updateSets}
+		WHERE ${query.strictWhere}
+	</update>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteById">
+		DELETE FROM [table]
+		WHERE [id] = #{id}
+	</delete>
+
+	<!-- 根据ID批量删除 -->
+	<delete id="deleteByIds" parameterType="ParamsQuery">
+		DELETE FROM [table]
+		WHERE [id] IN
+		<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 根据查询条件批量删除 -->
+	<delete id="delete" parameterType="ParamsQuery">
+		DELETE FROM [table]
+		WHERE ${query.strictWhere}
+	</delete>
+
+
+	<!-- 根据主键查询 ${query.commonWhere} -->
+	<select id="findById" resultMap="BaseResultMap">
+		SELECT *
+		FROM [table]
+		WHERE [id] = #{id}
+	</select>
+	<!-- 根据查询条件，查找一个 -->
+	<select id="findOne" parameterType="ParamsQuery" resultMap="BaseResultMap">
+		SELECT ${query.selects}
+		FROM [table]
+		WHERE ${query.commonWhere}
+		<if test="sortAs != null">
+			ORDER BY ${sortAs}
+		</if>
+		LIMIT 1
+	</select>
+	<!-- 根据ID和条件，批量查询 -->
+	<select id="findByIds" parameterType="ParamsQuery" resultMap="BaseResultMap">
+		SELECT ${query.selects}
+		FROM [table]
+		WHERE [id] IN
+		<foreach item="item" index="index" collection="primaryKeys" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="sortAs != null">
+			ORDER BY ${sortAs}
+		</if>
+	</select>
+	<!-- 根据查询条件,批量查询 -->
+	<select id="find" parameterType="ParamsQuery" resultMap="BaseResultMap">
+		SELECT ${query.selects}
+		FROM [table]
+		WHERE ${query.commonWhere}
+		<if test="sortAs != null">
+			ORDER BY ${sortAs}
+		</if>
+	</select>
+
+
+	<!-- 单表分页（获取数量） -->
+	<select id="count" parameterType="ParamsQuery" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM [table]
+		WHERE
+		${query.commonWhere}
+	</select>
+	<!-- 单表分页（获取分页内容） -->
+	<select id="page" parameterType="ParamsQuery" resultMap="BaseResultMap">
+		SELECT ${query.selects}
+		FROM [table]
+		WHERE ${query.commonWhere}
+		<if test="sortAs != null">
+			ORDER BY ${sortAs}
+		</if>
+		LIMIT #{query.start}, #{query.limit}
+	</select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="cacheEnabled" value="false" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="ParamsQuery" type="com.lanyine.manifold.mybatis.query.ParamsQuery" />
+		<typeAlias alias="KV" type="com.lanyine.manifold.mybatis.base.KV" />
+	</typeAliases>
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC">
+				<property name="" value="" />
+			</transactionManager>
+			<dataSource type="UNPOOLED">
+				<property name="driver" value="org.hsqldb.jdbcDriver" />
+				<property name="url" value="jdbc:hsqldb:mem:basetest" />
+				<property name="username" value="sa" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<mapper class="com.lanyine.manifold.mybatis.test.domain.dao.StudentPoMapper" />
+	</mappers>
+
+</configuration>
