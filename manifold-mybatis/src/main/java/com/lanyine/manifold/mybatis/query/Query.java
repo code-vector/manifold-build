@@ -242,19 +242,11 @@ public class Query {
 	 * @return
 	 */
 	public Query where(BaseQuery baseQuery, boolean include, String... fields) {
-		String sort = baseQuery.getSortFields();
-		if (sort != null) {
-			baseQuery.setSortFields(null);
-			Arrays.asList(sort.trim().split(",")).forEach(x -> {
-				String[] xs = x.trim().split("\\s+");
-				if (xs.length == 2 && xs[1].toUpperCase().matches("DESC|ASC")) {
-					this.sort.getSortMap().put(xs[0], xs[1].toUpperCase());
-				} else {
-					throw new BaseDaoException("DB1001", "BaseQuery sortFields format error.");
-				}
-			});
+		Map<String, String> orders = baseQuery.getOrderFields();
+		if (!orders.isEmpty()) {
+			// baseQuery.getOrderFields().clear();
+			this.sort.getSortMap().putAll(orders);
 		}
-
 		return filterToMap(baseQuery, include, fields);
 	}
 

@@ -6,45 +6,47 @@ package com.lanyine.manifold.base.beans;
  * @author shadow
  */
 public class Pagination extends PageRequest {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * 查询的总条数
-     */
-    private int total;
+	/**
+	 * 查询的总条数
+	 */
+	private int total;
 
-    /**
-     * 最大页码
-     */
-    private int maxPage;
+	/**
+	 * 最大页码
+	 */
+	private int maxPage;
 
-    public Pagination() {
-    }
+	public Pagination() {
+	}
 
-    public Pagination(int page, int pageSize, int total) {
-        super(new PageRequest(page, pageSize));
-        setTotal(total);
-    }
+	public Pagination(int page, int pageSize, int total) {
+		super(page, pageSize);
+		setTotal(total);
+	}
 
-    protected Pagination(PageRequest page, int total) {
-        super(page);
-        setTotal(total);
-    }
+	protected Pagination(PageRequest page, int total) {
+		super(page);
+		setTotal(total);
+	}
 
-    public int getTotal() {
-        return total;
-    }
+	public int getTotal() {
+		return total;
+	}
 
-    public void setTotal(int total) {
-        this.total = total < 0 ? 0 : total;
-        this.setMaxPage((this.total - 1) / getPageSize() + 1);
-    }
+	public Pagination setTotal(int total) {
+		this.total = Math.max(total, 0);
+		this.setMaxPage((this.total - 1) / getPageSize() + 1);
+		return this;
+	}
 
-    public int getMaxPage() {
-        return maxPage;
-    }
+	public int getMaxPage() {
+		return maxPage;
+	}
 
-    private void setMaxPage(int maxPage) {
-        this.maxPage = maxPage;
-    }
+	private Pagination setMaxPage(int maxPage) {
+		this.maxPage = maxPage;
+		return this;
+	}
 }

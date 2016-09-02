@@ -37,8 +37,9 @@ public class PageResponse<T> extends Pagination {
 		return items;
 	}
 
-	public void setItems(List<T> items) {
+	public PageResponse<T> setItems(List<T> items) {
 		this.items = items;
+		return this;
 	}
 
 	/**

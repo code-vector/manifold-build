@@ -1,9 +1,8 @@
 package com.lanyine.manifold.base.beans;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 条件查询的基类
@@ -11,44 +10,63 @@ import java.io.Serializable;
  * @author shadow
  */
 public abstract class BaseQuery implements Serializable {
-    private static final long serialVersionUID = 1L;
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
-    private String sortFields;
+	private static final long serialVersionUID = 1L;
+	private Map<String, String> orderMap = new LinkedHashMap<>();
 
-    public String getSortFields() {
-        return sortFields;
-    }
+	/**
+	 * field 属性按照降序排列
+	 *
+	 * @param field
+	 *            需要排序的字段
+	 * @return 当前类，可连续操作
+	 */
+	public final BaseQuery desc(String field) {
+		return sort(field, "DESC");
+	}
 
-    /**
-     * field 属性按照降序排列
-     *
-     * @param field 需要排序的字段
-     * @return 当前类，可连续操作
-     */
-    public final BaseQuery desc(String field) {
-        return this;
-    }
+	/**
+	 * field 属性按照升序排列
+	 *
+	 * @param field
+	 *            需要排序的字段s
+	 * @return 当前类，可连续操作
+	 */
+	public final BaseQuery asc(String field) {
+		return sort(field, "ASC");
+	}
 
-    /**
-     * field 属性按照升序排列
-     *
-     * @param field 需要排序的字段
-     * @return 当前类，可连续操作
-     */
-    public final BaseQuery asc(String field) {
+	public Map<String, String> getOrderFields() {
+		return orderMap;
+	}
 
-        return this;
-    }
+	/**
+	 * orderFields : "id desc, name asc"
+	 * 
+	 * @param orderFields
+	 *            排序内容
+	 */
+	public final BaseQuery setOrderFields(String orderFields) {
+		if (orderFields != null) {
+			String[] orders = orderFields.trim().split(",");
+			for (String str : orders) {
+				String[] xs = str.trim().split("\\s+");
+				if (xs.length == 2 && xs[1].toUpperCase().matches("DESC|ASC")) {
+					sort(xs[0], xs[1].toUpperCase());
+				}
+			}
+		}
+		return this;
+	}
 
-    public final void setSortFields(String sortFields) {
-        if (sortFields != null) {
-            for (String x : sortFields.trim().split(",")) {
-                if (!(x.trim().split("\\s+")[1].toUpperCase().matches("DESC|ASC"))) {
-                    logger.error("{}设置排序格式错误，sortFields={}", getClass().getName(), sortFields);
-                    throw new RuntimeException("BaseQuery sortFields format error. sortFields=" + sortFields);
-                }
-            }
-        }
-        this.sortFields = sortFields;
-    }
+	private BaseQuery sort(String field, String sort) {
+		if (field == null) {
+			return this;
+		}
+
+		field = field.trim();
+		if (!orderMap.containsKey(field)) {
+			orderMap.put(field, sort);
+		}
+		return this;
+	}
 }
